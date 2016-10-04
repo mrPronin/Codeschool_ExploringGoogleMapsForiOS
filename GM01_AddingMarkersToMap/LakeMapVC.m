@@ -11,8 +11,10 @@
 
 @interface LakeMapVC () <GMSMapViewDelegate>
 
-@property(strong, nonatomic) GMSMapView *mapView;
 @property(strong, nonatomic) NSSet *markers;
+@property(strong, nonatomic) NSURLSession *markerSession;
+
+@property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 
 @end
 
@@ -21,21 +23,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    config.URLCache = [[NSURLCache alloc] initWithMemoryCapacity:2 * 1024 * 1024
+                                                    diskCapacity:10 * 1024 *1024
+                                                        diskPath:@"MarkerData"];
+    self.markerSession = [NSURLSession sessionWithConfiguration:config];
+    
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:28.5382
                                                             longitude:-81.3687
                                                                  zoom:15
                                                               bearing:0
                                                          viewingAngle:0];
     
-    self.mapView = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
+    self.mapView.camera = camera;
     self.mapView.mapType = kGMSTypeNormal;
     self.mapView.myLocationEnabled = YES;
     self.mapView.settings.compassButton = YES;
     self.mapView.settings.myLocationButton = YES;
     [self.mapView setMinZoom:15 maxZoom:15];
     self.mapView.delegate = self;
-    
-    [self.view addSubview:self.mapView];
     
     [self setupMarkerData];
 }
@@ -102,6 +108,28 @@
     UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:okButton];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - Actions
+
+- (IBAction)downloadMarkerData:(id)sender {
+    NSURL *lakesURL = [NSURL URLWithString:@"http://192.168.1.148:3000/markers"];
+    NSURLSessionDataTask *task = [self.markerSession dataTaskWithURL:lakesURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSArray *json = [NSJSONSerialization JSONObjectWithData:data
+                                                        options:0
+                                                          error:nil];
+        [self createMarkerObjectsWithJson:json];
+        NSLog(@"json: %@", json);
+        
+    }];
+    [task resume];
+}
+
+- (void)createMarkerObjectsWithJson:(NSArray *)json {
+    NSMutableSet *mutableSet = [[NSMutableSet alloc] initWithSet:self.markers];
+    for (NSDictionary *markerData in json) {
+        
+    }
 }
 
 @end

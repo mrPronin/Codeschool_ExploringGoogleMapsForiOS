@@ -1,0 +1,20 @@
+{
+  "markers": [
+    {
+      "id": 1,
+      "appearAnimation": 1,
+      "lat": "28.5441",
+      "lng": "-81.37301",
+      "title": "Lake Eola",
+      "shippet": "Come see the swans"
+    },
+    {
+      "id": 2,
+      "appearAnimation": 0,
+      "lat": "28.53137",
+      "lng": "-81.36675",
+      "title": "Lake Davis",
+      "shippet": "Check out the great park"
+    }
+    ]
+}
