@@ -14,6 +14,7 @@
 
 @property(strong, nonatomic) NSSet *markers;
 @property(strong, nonatomic) NSURLSession *markerSession;
+@property(strong, nonatomic) CSMarker *userCreatedMarker;
 
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 
@@ -80,6 +81,12 @@
             marker.map = self.mapView;
         }
     }
+    if (self.userCreatedMarker != nil && self.userCreatedMarker.map == nil) {
+        self.userCreatedMarker.map = self.mapView;
+        self.mapView.selectedMarker = self.userCreatedMarker;
+        GMSCameraUpdate *cameraUpdate = [GMSCameraUpdate setTarget:self.userCreatedMarker.position];
+        [self.mapView animateWithCameraUpdate:cameraUpdate];
+    }
 }
 
 #pragma mark - GMSMapViewDelegate
@@ -111,6 +118,23 @@
     UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
     [alert addAction:okButton];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    if (self.userCreatedMarker != nil) {
+        self.userCreatedMarker.map = nil;
+        self.userCreatedMarker = nil;
+    }
+    
+    CSMarker *marker = [[CSMarker alloc] init];
+    marker.position = coordinate;
+    marker.appearAnimation = kGMSMarkerAnimationPop;
+    marker.title = @"created by user";
+    marker.map = nil;
+    self.userCreatedMarker = marker;
+    
+    [self drawMarkers];
 }
 
 #pragma mark - Actions
