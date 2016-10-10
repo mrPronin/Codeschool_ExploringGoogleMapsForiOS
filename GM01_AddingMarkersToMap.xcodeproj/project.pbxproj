@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E213E041DAB0D20005B9802 /* DirectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E213E031DAB0D20005B9802 /* DirectionCell.m */; };
 		3E3BE1B11DA2CAA100864365 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BE1B01DA2CAA100864365 /* main.m */; };
 		3E3BE1B41DA2CAA100864365 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BE1B31DA2CAA100864365 /* AppDelegate.m */; };
 		3E3BE1B71DA2CAA100864365 /* LakeMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BE1B61DA2CAA100864365 /* LakeMapVC.m */; };
@@ -14,10 +15,13 @@
 		3E3BE1BC1DA2CAA100864365 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E3BE1BB1DA2CAA100864365 /* Assets.xcassets */; };
 		3E3BE1BF1DA2CAA100864365 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E3BE1BD1DA2CAA100864365 /* LaunchScreen.storyboard */; };
 		3E5D4D751DA457F500E7124A /* CSMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5D4D741DA457F500E7124A /* CSMarker.m */; };
+		3EBDC54C1DAACDC300B320F1 /* DirectionsListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EBDC54B1DAACDC300B320F1 /* DirectionsListVC.m */; };
 		D9E1AC8E360E9BEAC1D81FEF /* Pods_GM01_AddingMarkersToMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F0C58C885A570404D90CC8B /* Pods_GM01_AddingMarkersToMap.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E213E021DAB0D20005B9802 /* DirectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionCell.h; sourceTree = "<group>"; };
+		3E213E031DAB0D20005B9802 /* DirectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionCell.m; sourceTree = "<group>"; };
 		3E3BE1AC1DA2CAA100864365 /* GM01_AddingMarkersToMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GM01_AddingMarkersToMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E3BE1B01DA2CAA100864365 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3E3BE1B21DA2CAA100864365 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -30,6 +34,8 @@
 		3E3BE1C01DA2CAA100864365 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E5D4D731DA457F500E7124A /* CSMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSMarker.h; sourceTree = "<group>"; };
 		3E5D4D741DA457F500E7124A /* CSMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSMarker.m; sourceTree = "<group>"; };
+		3EBDC54A1DAACDC300B320F1 /* DirectionsListVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionsListVC.h; sourceTree = "<group>"; };
+		3EBDC54B1DAACDC300B320F1 /* DirectionsListVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionsListVC.m; sourceTree = "<group>"; };
 		8CEA99B7A6D5C0FBFFAA25C6 /* Pods-GM01_AddingMarkersToMap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GM01_AddingMarkersToMap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GM01_AddingMarkersToMap/Pods-GM01_AddingMarkersToMap.debug.xcconfig"; sourceTree = "<group>"; };
 		8F0C58C885A570404D90CC8B /* Pods_GM01_AddingMarkersToMap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GM01_AddingMarkersToMap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E0CE83A24F96FB1BFCAECA /* Pods-GM01_AddingMarkersToMap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GM01_AddingMarkersToMap.release.xcconfig"; path = "Pods/Target Support Files/Pods-GM01_AddingMarkersToMap/Pods-GM01_AddingMarkersToMap.release.xcconfig"; sourceTree = "<group>"; };
@@ -104,6 +110,8 @@
 			children = (
 				3E3BE1B51DA2CAA100864365 /* LakeMapVC.h */,
 				3E3BE1B61DA2CAA100864365 /* LakeMapVC.m */,
+				3EBDC54A1DAACDC300B320F1 /* DirectionsListVC.h */,
+				3EBDC54B1DAACDC300B320F1 /* DirectionsListVC.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -120,6 +128,8 @@
 		3E3BE1C81DA2D74E00864365 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3E213E021DAB0D20005B9802 /* DirectionCell.h */,
+				3E213E031DAB0D20005B9802 /* DirectionCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -258,8 +268,10 @@
 			files = (
 				3E3BE1B71DA2CAA100864365 /* LakeMapVC.m in Sources */,
 				3E5D4D751DA457F500E7124A /* CSMarker.m in Sources */,
+				3EBDC54C1DAACDC300B320F1 /* DirectionsListVC.m in Sources */,
 				3E3BE1B41DA2CAA100864365 /* AppDelegate.m in Sources */,
 				3E3BE1B11DA2CAA100864365 /* main.m in Sources */,
+				3E213E041DAB0D20005B9802 /* DirectionCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,14 +9,17 @@
 #import "LakeMapVC.h"
 #import <GoogleMaps/GoogleMaps.h>
 #import "CSMarker.h"
+#import "DirectionsListVC.h"
 
 @interface LakeMapVC () <GMSMapViewDelegate>
 
 @property(strong, nonatomic) NSSet *markers;
 @property(strong, nonatomic) NSURLSession *markerSession;
 @property(strong, nonatomic) CSMarker *userCreatedMarker;
+@property(strong, nonatomic) NSArray *steps;
 
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *directionsButton;
 
 @end
 
@@ -25,15 +28,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    float minZoom = 13.9;
+    float maxZoom = 16;
+    
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     config.URLCache = [[NSURLCache alloc] initWithMemoryCapacity:2 * 1024 * 1024
                                                     diskCapacity:10 * 1024 *1024
                                                         diskPath:@"MarkerData"];
     self.markerSession = [NSURLSession sessionWithConfiguration:config];
     
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:28.5382
-                                                            longitude:-81.3687
-                                                                 zoom:14
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:48.6983
+                                                            longitude:26.5757
+                                                                 zoom:minZoom
                                                               bearing:0
                                                          viewingAngle:0];
     
@@ -42,10 +48,11 @@
     self.mapView.myLocationEnabled = YES;
     self.mapView.settings.compassButton = YES;
     self.mapView.settings.myLocationButton = YES;
-    [self.mapView setMinZoom:14 maxZoom:14];
+    [self.mapView setMinZoom:minZoom maxZoom:maxZoom];
     self.mapView.delegate = self;
     
     [self setupMarkerData];
+    self.directionsButton.enabled = false;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -57,41 +64,10 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)setupMarkerData {
-//    GMSMarker *marker1 = [[GMSMarker alloc] init];
-//    marker1.position = CLLocationCoordinate2DMake(28.5441, -81.37301);
-//    marker1.title = @"Lake Eola";
-//    marker1.snippet = @"Come see the swans";
-//    marker1.appearAnimation = kGMSMarkerAnimationPop;
-//    marker1.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
-//    marker1.map = nil;
-//    
-//    GMSMarker *marker2 = [[GMSMarker alloc] init];
-//    marker2.position = CLLocationCoordinate2DMake(28.53137, -81.36675);
-//    marker2.map = nil;
-//    
-//    self.markers = [NSSet setWithObjects:marker1, marker2, nil];
-    
-    [self drawMarkers];
-}
-
-- (void)drawMarkers {
-    for (CSMarker *marker in self.markers) {
-        if (marker.map == nil) {
-            marker.map = self.mapView;
-        }
-    }
-    if (self.userCreatedMarker != nil && self.userCreatedMarker.map == nil) {
-        self.userCreatedMarker.map = self.mapView;
-        self.mapView.selectedMarker = self.userCreatedMarker;
-        GMSCameraUpdate *cameraUpdate = [GMSCameraUpdate setTarget:self.userCreatedMarker.position];
-        [self.mapView animateWithCameraUpdate:cameraUpdate];
-    }
-}
-
 #pragma mark - GMSMapViewDelegate
 
-
+/*
+// custom label example
 - (UIView *GMS_NULLABLE_PTR)mapView:(GMSMapView *)mapView markerInfoWindow:(GMSMarker *)marker {
     UIView *infoWindow = [[UIView alloc] init];
     infoWindow.frame = CGRectMake(0, 0, 200, 70);
@@ -110,7 +86,53 @@
     
     return infoWindow;
 }
+*/
 
+
+// finding directions example
+- (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
+//    NSLog(@"[%@ %@]", [self class], NSStringFromSelector(_cmd));
+    if (self.mapView.myLocation != nil) {
+        NSString *urlString = [NSString stringWithFormat:
+                               @"%@?origin=%f,%f&destination=%f,%f&sensor=true&key=%@",
+                               @"https://maps.googleapis.com/maps/api/directions/json",
+                               mapView.myLocation.coordinate.latitude,
+                               mapView.myLocation.coordinate.longitude,
+                               marker.position.latitude,
+                               marker.position.longitude,
+                               @"AIzaSyBTBTHaSY0S0C3gRzcveCa-2SpVW10WfV0"];
+        NSURL *directionsURL = [NSURL URLWithString:urlString];
+        NSURLSessionDataTask *directionsTask = [self.markerSession dataTaskWithURL:directionsURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable err) {
+            NSError *error = nil;
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            if (!error && json.count) {
+                self.steps = json[@"routes"][0][@"legs"][0][@"steps"];
+                
+//                NSLog(@"steps: %@", self.steps);
+                
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    self.directionsButton.enabled = true;
+                }];
+            }
+        }];
+        [directionsTask resume];
+    }
+    return YES;
+}
+
+
+- (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    if (self.directionsButton.enabled) {
+        self.directionsButton.enabled = false;
+    }
+}
+
+- (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
+    if (self.directionsButton.enabled) {
+        self.directionsButton.enabled = false;
+    }
+    self.mapView.selectedMarker = nil;
+}
 
 - (void)mapView:(GMSMapView *)mapView didTapInfoWindowOfMarker:(GMSMarker *)marker {
     NSString *message = [NSString stringWithFormat:@"You tapped the info window for the %@ marker", marker.title];
@@ -127,14 +149,21 @@
         self.userCreatedMarker = nil;
     }
     
-    CSMarker *marker = [[CSMarker alloc] init];
-    marker.position = coordinate;
-    marker.appearAnimation = kGMSMarkerAnimationPop;
-    marker.title = @"created by user";
-    marker.map = nil;
-    self.userCreatedMarker = marker;
+    GMSGeocoder *geocoder = [GMSGeocoder geocoder];
     
-    [self drawMarkers];
+    [geocoder reverseGeocodeCoordinate:coordinate completionHandler:^(GMSReverseGeocodeResponse *response, NSError *error) {
+        CSMarker *marker = [[CSMarker alloc] init];
+        marker.position = coordinate;
+        marker.appearAnimation = kGMSMarkerAnimationPop;
+        marker.map = nil;
+        marker.title = response.firstResult.thoroughfare;
+        marker.snippet =  response.firstResult.locality;
+        self.userCreatedMarker = marker;
+        
+        NSLog(@"new marker: [latitude - %f] [longitude - %f] [title - %@] [snippet - %@]", coordinate.latitude, coordinate.longitude, marker.title, marker.snippet);
+        
+        [self drawMarkers];
+    }];
 }
 
 #pragma mark - Actions
@@ -152,9 +181,55 @@
     [task resume];
 }
 
+- (IBAction)directionsTapped:(id)sender {
+    DirectionsListVC *directionsListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"DirectionsListVC"];
+    directionsListVC.steps = self.steps;
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:directionsListVC];
+    [self presentViewController:nc animated:YES completion:^{
+        self.steps = nil;
+        self.mapView.selectedMarker = nil;
+        self.directionsButton.enabled = false;
+    }];
+}
+
+#pragma mark - Private
+
+- (void)drawMarkers {
+    for (CSMarker *marker in self.markers) {
+        if (marker.map == nil) {
+            marker.map = self.mapView;
+        }
+    }
+    if (self.userCreatedMarker != nil && self.userCreatedMarker.map == nil) {
+        self.userCreatedMarker.map = self.mapView;
+        self.mapView.selectedMarker = self.userCreatedMarker;
+        GMSCameraUpdate *cameraUpdate = [GMSCameraUpdate setTarget:self.userCreatedMarker.position];
+        [self.mapView animateWithCameraUpdate:cameraUpdate];
+    }
+}
+
+- (void)setupMarkerData {
+    //    GMSMarker *marker1 = [[GMSMarker alloc] init];
+    //    marker1.position = CLLocationCoordinate2DMake(28.5441, -81.37301);
+    //    marker1.title = @"Lake Eola";
+    //    marker1.snippet = @"Come see the swans";
+    //    marker1.appearAnimation = kGMSMarkerAnimationPop;
+    //    marker1.icon = [GMSMarker markerImageWithColor:[UIColor greenColor]];
+    //    marker1.map = nil;
+    //
+    //    GMSMarker *marker2 = [[GMSMarker alloc] init];
+    //    marker2.position = CLLocationCoordinate2DMake(28.53137, -81.36675);
+    //    marker2.map = nil;
+    //
+    //    self.markers = [NSSet setWithObjects:marker1, marker2, nil];
+    
+    [self drawMarkers];
+}
+
 - (void)createMarkerObjectsWithJson:(NSArray *)json {
     NSMutableSet *mutableSet = [[NSMutableSet alloc] initWithSet:self.markers];
     for (NSDictionary *markerData in json) {
+        
         CSMarker *newMarker = [[CSMarker alloc] init];
         newMarker.objectID = [markerData[@"id"] stringValue];
         newMarker.appearAnimation = (GMSMarkerAnimation)[markerData[@"appearAnimation"] integerValue];

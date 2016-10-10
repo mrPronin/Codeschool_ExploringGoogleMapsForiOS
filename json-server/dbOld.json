@@ -1,0 +1,52 @@
+{
+  "markers": [
+    {
+      "id": 1,
+      "appearAnimation": 1,
+      "lat": "28.5441",
+      "lng": "-81.37301",
+      "title": "Lake Eola",
+      "shippet": "Come see the swans"
+    },
+    {
+      "id": 2,
+      "appearAnimation": 0,
+      "lat": "28.53137",
+      "lng": "-81.36675",
+      "title": "Lake Davis",
+      "shippet": "Check out the great park"
+    },
+    {
+      "id": 3,
+      "appearAnimation": 1,
+      "lat": "28.628500",
+      "lng": "-81.617300",
+      "title": "Lake Apopka",
+      "shippet": "Check out the great park"
+    },
+    {
+      "id": 4,
+      "appearAnimation": 1,
+      "lat": "28.529510",
+      "lng": "-81.379190",
+      "title": "Lake Of The Moods",
+      "shippet": "Check out the great park"
+    },
+    {
+      "id": 5,
+      "appearAnimation": 1,
+      "lat": "28.541100",
+      "lng": "-81.336100",
+      "title": "Lake Underhill",
+      "shippet": "Check out the great park"
+    },
+    {
+      "id": 6,
+      "appearAnimation": 1,
+      "lat": "28.522760",
+      "lng": "-81.356700",
+      "title": "Hourglass Lake",
+      "shippet": "Check out the great park"
+    }
+    ]
+}
