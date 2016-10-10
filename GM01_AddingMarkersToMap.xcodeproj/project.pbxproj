@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E0034501DAC024200B4F543 /* StreetViewVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E00344F1DAC024200B4F543 /* StreetViewVC.m */; };
 		3E213E041DAB0D20005B9802 /* DirectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E213E031DAB0D20005B9802 /* DirectionCell.m */; };
 		3E3BE1B11DA2CAA100864365 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BE1B01DA2CAA100864365 /* main.m */; };
 		3E3BE1B41DA2CAA100864365 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E3BE1B31DA2CAA100864365 /* AppDelegate.m */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E00344E1DAC024200B4F543 /* StreetViewVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreetViewVC.h; sourceTree = "<group>"; };
+		3E00344F1DAC024200B4F543 /* StreetViewVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreetViewVC.m; sourceTree = "<group>"; };
 		3E213E021DAB0D20005B9802 /* DirectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectionCell.h; sourceTree = "<group>"; };
 		3E213E031DAB0D20005B9802 /* DirectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectionCell.m; sourceTree = "<group>"; };
 		3E3BE1AC1DA2CAA100864365 /* GM01_AddingMarkersToMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GM01_AddingMarkersToMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +115,8 @@
 				3E3BE1B61DA2CAA100864365 /* LakeMapVC.m */,
 				3EBDC54A1DAACDC300B320F1 /* DirectionsListVC.h */,
 				3EBDC54B1DAACDC300B320F1 /* DirectionsListVC.m */,
+				3E00344E1DAC024200B4F543 /* StreetViewVC.h */,
+				3E00344F1DAC024200B4F543 /* StreetViewVC.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -270,6 +275,7 @@
 				3E5D4D751DA457F500E7124A /* CSMarker.m in Sources */,
 				3EBDC54C1DAACDC300B320F1 /* DirectionsListVC.m in Sources */,
 				3E3BE1B41DA2CAA100864365 /* AppDelegate.m in Sources */,
+				3E0034501DAC024200B4F543 /* StreetViewVC.m in Sources */,
 				3E3BE1B11DA2CAA100864365 /* main.m in Sources */,
 				3E213E041DAB0D20005B9802 /* DirectionCell.m in Sources */,
 			);

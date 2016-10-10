@@ -10,6 +10,7 @@
 #import <GoogleMaps/GoogleMaps.h>
 #import "CSMarker.h"
 #import "DirectionsListVC.h"
+#import "StreetViewVC.h"
 
 @interface LakeMapVC () <GMSMapViewDelegate>
 
@@ -18,9 +19,12 @@
 @property(strong, nonatomic) CSMarker *userCreatedMarker;
 @property(strong, nonatomic) NSArray *steps;
 @property(strong, nonatomic) GMSPolyline *polyline;
+@property(assign, nonatomic) CLLocationCoordinate2D activeMarkerCoordinate;
 
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *directionsButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *streetViewButton;
+
 
 @end
 
@@ -54,6 +58,7 @@
     
     [self setupMarkerData];
     self.directionsButton.enabled = false;
+    self.streetViewButton.enabled = false;
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -93,6 +98,7 @@
 // finding directions example
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
 //    NSLog(@"[%@ %@]", [self class], NSStringFromSelector(_cmd));
+    self.activeMarkerCoordinate = marker.position;
     if (self.mapView.myLocation != nil) {
         self.polyline.map = nil;
         self.polyline = nil;
@@ -133,6 +139,9 @@
     if (self.directionsButton.enabled) {
         self.directionsButton.enabled = false;
     }
+    if (self.streetViewButton.enabled) {
+        self.streetViewButton.enabled = false;
+    }
     if (self.polyline) {
         self.polyline.map = nil;
         self.polyline = nil;
@@ -142,6 +151,9 @@
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
     if (self.directionsButton.enabled) {
         self.directionsButton.enabled = false;
+    }
+    if (self.streetViewButton.enabled) {
+        self.streetViewButton.enabled = false;
     }
     if (self.polyline) {
         self.polyline.map = nil;
@@ -160,6 +172,9 @@
 
 - (void)mapView:(GMSMapView *)mapView didLongPressAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
+    if (self.streetViewButton.enabled) {
+        self.streetViewButton.enabled = false;
+    }
     if (self.userCreatedMarker != nil) {
         self.userCreatedMarker.map = nil;
         self.userCreatedMarker = nil;
@@ -212,6 +227,16 @@
     }];
 }
 
+- (IBAction)streetViewTapped:(id)sender {
+    StreetViewVC *streetViewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"StreetViewVC"];
+    streetViewVC.coordinate = self.activeMarkerCoordinate;
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:streetViewVC];
+    [self presentViewController:nc animated:YES completion:^{
+        self.mapView.selectedMarker = nil;
+        self.streetViewButton.enabled = false;
+    }];
+}
+
 #pragma mark - Private
 
 - (void)drawMarkers {
@@ -247,6 +272,7 @@
 }
 
 - (void)createMarkerObjectsWithJson:(NSArray *)json {
+    self.streetViewButton.enabled = true;
     NSMutableSet *mutableSet = [[NSMutableSet alloc] initWithSet:self.markers];
     for (NSDictionary *markerData in json) {
         

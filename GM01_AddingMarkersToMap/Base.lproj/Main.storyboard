@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -36,20 +37,54 @@
                                 <action selector="downloadMarkerData:" destination="BYZ-38-t0r" id="Ayp-ra-sBJ"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="EiL-XD-1YB">
-                            <connections>
-                                <action selector="directionsTapped:" destination="BYZ-38-t0r" id="rSI-fT-Tfi"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Directions" id="EiL-XD-1YB">
+                                <connections>
+                                    <action selector="directionsTapped:" destination="BYZ-38-t0r" id="rSI-fT-Tfi"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Street view" id="bDU-PW-jrq" userLabel="Street view Button">
+                                <connections>
+                                    <action selector="streetViewTapped:" destination="BYZ-38-t0r" id="Gfr-7b-KTC"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="directionsButton" destination="EiL-XD-1YB" id="CJK-3b-GA1"/>
                         <outlet property="mapView" destination="YnS-zK-qWL" id="w1P-pg-FRE"/>
+                        <outlet property="streetViewButton" destination="bDU-PW-jrq" id="ond-Rd-tSD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1079.2" y="103.89805097451276"/>
+        </scene>
+        <!--Street ViewVC-->
+        <scene sceneID="zdO-Xf-ddF">
+            <objects>
+                <viewController storyboardIdentifier="StreetViewVC" id="3KY-8X-dKh" customClass="StreetViewVC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="L9v-Mt-Al7"/>
+                        <viewControllerLayoutGuide type="bottom" id="CHv-8a-HoF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8Lm-tT-0e6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="pLd-wv-U2V">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="AAB-lR-CuN">
+                            <connections>
+                                <action selector="doneButtonTapped:" destination="3KY-8X-dKh" id="84m-Sb-JTF"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nBn-a2-wTw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1836" y="104"/>
         </scene>
         <!--Directions ListVC-->
         <scene sceneID="TQK-mX-NgK">
@@ -64,7 +99,7 @@
                                 <rect key="frame" x="0.0" y="92" width="375" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Qv1-mV-mBJ" id="E0O-Eo-ODO">
-                                    <frame key="frameInset" width="375" height="89.5"/>
+                                    <frame key="frameInset" width="375" height="89"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <webView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H5i-Cn-6Om">
@@ -106,7 +141,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="60u-Rv-Bve" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="N9g-Ul-eKD">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="N9g-Ul-eKD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

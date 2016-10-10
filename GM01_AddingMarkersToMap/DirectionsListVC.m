@@ -37,7 +37,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSLog(@"html: %@", self.steps[indexPath.row][@"html_instructions"]);
+//    NSLog(@"html: %@", self.steps[indexPath.row][@"html_instructions"]);
     
     DirectionCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DirectionCell" forIndexPath:indexPath];
     NSString *directionHtml = [NSString stringWithFormat:@"<p style='font-family:verdana;font-size:80\%%'>%@</p>", self.steps[indexPath.row][@"html_instructions"]];
