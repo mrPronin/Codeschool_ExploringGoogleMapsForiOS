@@ -17,6 +17,7 @@
 @property(strong, nonatomic) NSURLSession *markerSession;
 @property(strong, nonatomic) CSMarker *userCreatedMarker;
 @property(strong, nonatomic) NSArray *steps;
+@property(strong, nonatomic) GMSPolyline *polyline;
 
 @property (weak, nonatomic) IBOutlet GMSMapView *mapView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *directionsButton;
@@ -93,6 +94,8 @@
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker {
 //    NSLog(@"[%@ %@]", [self class], NSStringFromSelector(_cmd));
     if (self.mapView.myLocation != nil) {
+        self.polyline.map = nil;
+        self.polyline = nil;
         NSString *urlString = [NSString stringWithFormat:
                                @"%@?origin=%f,%f&destination=%f,%f&sensor=true&key=%@",
                                @"https://maps.googleapis.com/maps/api/directions/json",
@@ -112,6 +115,11 @@
                 
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     self.directionsButton.enabled = true;
+                    GMSPath *path = [GMSPath pathFromEncodedPath:json[@"routes"][0][@"overview_polyline"][@"points"]];
+                    self.polyline = [GMSPolyline polylineWithPath:path];
+                    self.polyline.strokeWidth = 7;
+                    self.polyline.strokeColor = [UIColor greenColor];
+                    self.polyline.map = self.mapView;
                 }];
             }
         }];
@@ -125,11 +133,19 @@
     if (self.directionsButton.enabled) {
         self.directionsButton.enabled = false;
     }
+    if (self.polyline) {
+        self.polyline.map = nil;
+        self.polyline = nil;
+    }
 }
 
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
     if (self.directionsButton.enabled) {
         self.directionsButton.enabled = false;
+    }
+    if (self.polyline) {
+        self.polyline.map = nil;
+        self.polyline = nil;
     }
     self.mapView.selectedMarker = nil;
 }
@@ -148,6 +164,10 @@
         self.userCreatedMarker.map = nil;
         self.userCreatedMarker = nil;
     }
+    if (self.polyline) {
+        self.polyline.map = nil;
+        self.polyline = nil;
+    }
     
     GMSGeocoder *geocoder = [GMSGeocoder geocoder];
     
@@ -160,7 +180,7 @@
         marker.snippet =  response.firstResult.locality;
         self.userCreatedMarker = marker;
         
-        NSLog(@"new marker: [latitude - %f] [longitude - %f] [title - %@] [snippet - %@]", coordinate.latitude, coordinate.longitude, marker.title, marker.snippet);
+//        NSLog(@"new marker: [latitude - %f] [longitude - %f] [title - %@] [snippet - %@]", coordinate.latitude, coordinate.longitude, marker.title, marker.snippet);
         
         [self drawMarkers];
     }];
